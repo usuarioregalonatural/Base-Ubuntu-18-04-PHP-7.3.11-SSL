@@ -1,0 +1,59 @@
+version: "3.1"
+services:
+    nginx-proxy:
+        image: vicsoft01/vic-nginx-proxy:1.1
+        #image: jwilder/nginx-proxy
+        container_name: vic-nginx-proxy
+        ports:
+          - "80:80"
+        volumes:
+          - /var/run/docker.sock:/tmp/docker.sock:ro
+          - ./certs:/etc/nginx/certs
+        depends_on:
+          - www
+    www:
+        #image: vicsoft01/ubuntu18.04-apache2.2-php7.3.11
+        image: vicsoft01/prestashop-1.7.6.1
+        container_name: tienda-web
+#        ports:
+#            - "8050:80"
+        volumes:
+            - /home/nuevatienda/20191122/web/prestashop:/var/www/html/
+            #- /home/nuevatienda/luigiz.com/tienda/prod-web/prestashop:/var/www/html/
+        environment:
+            - VIRTUAL_HOST=luigiz.com,www.luigiz.com
+            - VIRTUAL_PORT=8050
+        links:
+            - db:db
+        networks:
+            - default
+    db:
+        image: mysql:5.7
+        container_name: tienda-mysql
+        ports:
+            - "33060:3306"
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_USER: victor
+            MYSQL_PASSWORD: vmsn2004
+            MYSQL_ROOT_PASSWORD: vmsn2004
+        volumes:
+            #- /home/nuevatienda/luigiz.com/tienda/prod-bbdd:/var/lib/mysql
+            - /home/nuevatienda/20191122/bbdd/mysql:/var/lib/mysql
+
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: tienda-phpMyAdmin
+        links:
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: victor
+            MYSQL_PASSWORD: vmsn2004
+            MYSQL_ROOT_PASSWORD: vmsn2004
+        networks:
+            - default
+

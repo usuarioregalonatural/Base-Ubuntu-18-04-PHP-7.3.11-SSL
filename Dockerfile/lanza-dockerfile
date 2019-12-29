@@ -1,0 +1,5 @@
+docker build -t vicsoft01/ubuntu18.04-apache2.2-php7.3.11-ssl:latest .
+#docker run -d -p 8050:80  -e VIRTUAL_HOST=backup.regalonatural.com -v /home/nousers/web/backup/public:/var/www/html --name backup.regalonatural.com -h backup.regalonatural.com vicsoft01/ubuntu-apache
+#docker run -d -p 8050:80 -p 443:443 -v /home/webpruebas:/var/www/html --name web-pruebas vicsoft01/ubuntu18.04-apache2.2-php7.3.11
+
+
